@@ -19,6 +19,7 @@ class GolfBot():
     @classmethod
     def countdown(cls, now):
 
+        # TODO -!--> refactor to reduce redundancy
         if int(now[:2]) == hr:
             if int(now[3:5]) == min:
                 print("T- " +
@@ -34,7 +35,6 @@ class GolfBot():
                 str(sec - int(now[6:8])) + " sec"  )
 
 
-
 class WebPage():
     """describes a web page for use with selenium"""
 
@@ -42,63 +42,64 @@ class WebPage():
         self.url = url
         self.driver = webdriver.Chrome("./chromedriver") # chromedriver executable needs to be in the parent directory
     
+
     def openPage(self):
         self.driver.get(self.url)
 
-##  <<== SELENIUM ==>>
-# TODO -!--> move to after the countdown
-# TODO -!--> connect to website
-url = "https://www.roccdallas.com/"
-rocc = WebPage(url)
-rocc.openPage()
-
-# TODO -!--> maybe login?
-#           \--> input fields?
-#            print("User logged in")
+    def closePage(self):
+        self.driver.quit()
 
 
-# TODO -!--> web scraper with beautifulsoup?
-"""client = urlopen(url)
-html = client.read()
-client.close()
-# parse html
-page = soup(html, "html.parser")
-print(page.title) # test that the page title prints correctly"""
-
-
-hr = 7
-min = 29
-sec = 60
-opentime = "07:30:00"
-now = time.ctime()[11:19]
-print(time.ctime())
-
-golf = GolfBot(hr, min, sec, opentime)
-
-# ---> give user time reference
-while now != opentime:
-
-    golf.countdown(now)
-
-    # ---> stop counting a couple seconds before opentime
-    now = time.ctime()[11:19]
-    if ( int(now[:2]) == golf.hr ) and ( int(now[3:5]) == golf.min) and ( int(now[6:]) >= golf.sec - 3):
-        break
-            
-    # otherwise, sleep 1 sec
-    time.sleep(1)
-
-
-# ---> wait until it is 8:00 am
-while time.ctime()[11:19] != opentime:
-    continue
-
-print("golf")
-print(time.ctime()[11:19])
-
-
-
-# TODO -!--> click button?
 
 if __name__ == "__main__":
-    pass
+    ##  <<== SELENIUM ==>>
+    # TODO -!--> move to after the countdown once testing is done
+
+    url = "https://www.roccdallas.com/"
+    rocc = WebPage(url)
+    rocc.openPage()
+
+    # TODO -!--> maybe login?
+    #           \--> input fields?
+    #            print("User logged in")
+
+
+    # TODO -!--> web scraper with beautifulsoup?
+    """client = urlopen(url)
+    html = client.read()
+    client.close()
+    # parse html
+    page = soup(html, "html.parser")
+    print(page.title) # test that the page title prints correctly"""
+
+
+    hr = 7
+    min = 29
+    sec = 60
+    opentime = "07:30:00"
+    now = time.ctime()[11:19]
+    print(time.ctime())
+
+    golf = GolfBot(hr, min, sec, opentime)
+
+    # ---> give user time reference
+    while now != opentime:
+
+        golf.countdown(now)
+
+        # ---> stop counting a couple seconds before opentime
+        now = time.ctime()[11:19]
+        if ( int(now[:2]) == golf.hr ) and ( int(now[3:5]) == golf.min) and ( int(now[6:]) >= golf.sec - 3):
+            break
+                
+        # otherwise, sleep 1 sec
+        time.sleep(1)
+
+
+    # ---> loop until it is exactly 7:30 am
+    while time.ctime()[11:19] != opentime:
+        continue
+
+    # TODO -!--> register tee time
+    print("golf")
+    print(time.ctime()[11:19])
