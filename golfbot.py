@@ -48,6 +48,11 @@ class WebPage():
     def closePage(self):
         self.driver.quit()
 
+    def clickMember(self, name="Austin Copley"):
+        # locate button
+        link = self.driver.find_element(webdriver.common.by.By.LINK_TEXT, name)
+        link.click()
+
 
 def main():
     ##  <<== SELENIUM ==>>
@@ -56,6 +61,12 @@ def main():
     url = "file:///Users/austincopley/Downloads/MemberIdentification.html"
     rocc = WebPage(url)
     rocc.openPage()
+
+    # click austin
+    # standard_button class <a> tags
+    # loop through them and click matching name
+
+    rocc.clickMember("Ellis Copley")
 
     # TODO -!--> maybe login?
     #           \--> input fields?
