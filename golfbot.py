@@ -49,9 +49,7 @@ class WebPage():
     def closePage(self):
         self.driver.quit()
 
-
-
-if __name__ == "__main__":
+def main():
     ##  <<== SELENIUM ==>>
     # TODO -!--> move to after the countdown once testing is done
 
@@ -103,3 +101,8 @@ if __name__ == "__main__":
     # TODO -!--> register tee time
     print("golf")
     print(time.ctime()[11:19])
+
+
+if __name__ == "__main__":
+    main()
+    
