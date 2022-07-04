@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
+import os
 import time
-from bs4 import BeautifulSoup as soup
-from urllib.request import urlopen
 from selenium import webdriver
+#from bs4 import BeautifulSoup as soup
+#from urllib.request import urlopen
 
 
 class GolfBot():
@@ -48,32 +49,67 @@ class WebPage():
     def closePage(self):
         self.driver.quit()
 
-    def clickMember(self, name="Austin Copley"):
-        # locate button
-        link = self.driver.find_element(webdriver.common.by.By.LINK_TEXT, name)
-        link.click()
+    def findLink(self, name):
+        # locate button by the link text
+        return self.driver.find_element(webdriver.common.by.By.LINK_TEXT, name)
+
+    def clickLink(self, name=""):
+        # locate button by the link text and click it
+        self.driver.find_element(webdriver.common.by.By.LINK_TEXT, name).click()
+
+    def setURL(self, url):
+        self.url = url
 
 
 def main():
+    input("Press Enter to continue...")
     ##  <<== SELENIUM ==>>
-    # TODO -!--> move to after the countdown once testing is done
+    # TODO -!--> move the countdown before this once testing is done
 
-    url = "file:///Users/austincopley/Downloads/MemberIdentification.html"
+    cwd = os.path.abspath(os.getcwd())
+    url = f"file://{cwd}/MemberIdentification.html"
     rocc = WebPage(url)
     rocc.openPage()
 
     # click austin
     # standard_button class <a> tags
-    # loop through them and click matching name
 
-    rocc.clickMember("Ellis Copley")
+    rocc.clickLink("Austin Copley")
+    """ # <<>> change page
+    rocc.closePage()
+    del rocc
+    url = f"file://{cwd}/MemberTeeSheet.html"
+    rocc = WebPage(url)
+    rocc.openPage()""" 
+    # <<>>
+
+    # loop through all possible timeslots, and determine if it can be clicked
+    s = 30
+    m = 7
+    meridian = "A"
+    while s < 51:
+        if meridian == "P":
+            if m > 5:
+                break
+        if m > 12:
+            m = 1
+            meridian = "P"
+        
+        if rocc.findLink(f"{m}:{s} {meridian}M"):
+            rocc.clickLink(f"{m}:{s} {meridian}M")
+            print(f"clicked on  {m}:{s} {meridian}M")
+            break
+        s += 10
+        if s == 60: s = 0; m += 1
+        
+
 
     # TODO -!--> maybe login?
     #           \--> input fields?
     #            print("User logged in")
 
 
-    # TODO -!--> web scraper with beautifulsoup?
+    # TODO -!--> web scrape with beautifulsoup?
     """client = urlopen(url)
     html = client.read()
     client.close()
