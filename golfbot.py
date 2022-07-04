@@ -72,7 +72,7 @@ class WebPage():
     def closePage(self):
         self.driver.quit()
 
-    # remove this function, its redundant; no need for it when checking for NoSuchElementException in clickLink()
+    # TODO -!--> remove this function, its redundant; no need for it when checking for NoSuchElementException in clickLink()
     def findLink(self, name):
         # locate button by the link text
         if not (self.driver.find_elements(webdriver.common.by.By.LINK_TEXT, name)):
@@ -102,19 +102,19 @@ def main():
 
     cwd = os.path.abspath(os.getcwd())
     url = f"file://{cwd}/MemberIdentification.html"
-    rocc = WebPage(url, "chrome")
-    rocc.openPage()
+    page = WebPage(url, "chrome")
+    page.openPage()
 
     # TODO -!--> move the countdown here once testing is done
 
     # click austin
     # buttons are <a> tags
 
-    rocc.clickLink("Austin Copley")
+    page.clickLink("Austin Copley")
 
     # pass the webpage to the golfbot to locate tee times
     h, m = int(teetime.split(":")[0]), int(teetime.split(":")[1])
-    golf.findTimes(rocc, h, m)
+    golf.findTimes(page, h, m)
 
     # TODO -!--> either give user opportunity to select their own players and methods of transport, or autofill fields
 
