@@ -16,23 +16,22 @@ class GolfBot():
         self.opentime = opentime
         
 
-    @classmethod
-    def countdown(cls, now):
+    def countdown(self, now):
 
         # TODO -!--> refactor to reduce redundancy
-        if int(now[:2]) == hr:
+        if int(now[:2]) == self.hr:
             if int(now[3:5]) == min:
                 print("T- " +
-                    str(sec - int(now[6:8])) + " sec")
+                    str(self.sec - int(now[6:8])) + " sec")
             else:
                 print("T- " +
-                    str(min - int(now[3:5])) + " min " +
-                    str(sec - int(now[6:8])) + " sec"  )
+                    str(self.min - int(now[3:5])) + " min " +
+                    str(self.sec - int(now[6:8])) + " sec"  )
         else:
             print("T- " +
-                str( hr - int(now[ :2])) + " hr "  +
-                str(min - int(now[3:5])) + " min " +
-                str(sec - int(now[6:8])) + " sec"  )
+                str(self.hr  - int(now[ :2])) + " hr "  +
+                str(self.min - int(now[3:5])) + " min " +
+                str(self.sec - int(now[6:8])) + " sec"  )
 
 
 class WebPage():
@@ -49,11 +48,12 @@ class WebPage():
     def closePage(self):
         self.driver.quit()
 
+
 def main():
     ##  <<== SELENIUM ==>>
     # TODO -!--> move to after the countdown once testing is done
 
-    url = "https://www.roccdallas.com/"
+    url = "file:///Users/austincopley/Downloads/MemberIdentification.html"
     rocc = WebPage(url)
     rocc.openPage()
 
