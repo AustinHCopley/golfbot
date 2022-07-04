@@ -41,7 +41,6 @@ class WebPage():
     def __init__(self, url):
         self.url = url
         self.driver = webdriver.Chrome("./chromedriver") # chromedriver executable needs to be in the parent directory
-    
 
     def openPage(self):
         self.driver.get(self.url)
@@ -51,6 +50,8 @@ class WebPage():
 
     def findLink(self, name):
         # locate button by the link text
+        # TODO -!--> return false if it doesnt exist
+        # might have to use beautiful soup for this
         return self.driver.find_element(webdriver.common.by.By.LINK_TEXT, name)
 
     def clickLink(self, name=""):
@@ -101,12 +102,6 @@ def main():
             break
         s += 10
         if s == 60: s = 0; m += 1
-        
-
-
-    # TODO -!--> maybe login?
-    #           \--> input fields?
-    #            print("User logged in")
 
 
     # TODO -!--> web scrape with beautifulsoup?
@@ -118,17 +113,13 @@ def main():
     print(page.title) # test that the page title prints correctly"""
 
 
-    hr = 7
-    min = 29
-    sec = 60
-    opentime = "07:30:00"
     now = time.ctime()[11:19]
     print(time.ctime())
 
-    golf = GolfBot(hr, min, sec, opentime)
+    golf = GolfBot(7, 29, 60, "07:30:00")
 
     # ---> give user time reference
-    while now != opentime:
+    while now != golf.opentime:
 
         golf.countdown(now)
 
@@ -142,10 +133,9 @@ def main():
 
 
     # ---> loop until it is exactly 7:30 am
-    while time.ctime()[11:19] != opentime:
+    while time.ctime()[11:19] != golf.opentime:
         continue
 
-    # TODO -!--> register tee time
     print("golf")
     print(time.ctime()[11:19])
 
