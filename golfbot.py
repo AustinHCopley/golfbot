@@ -4,8 +4,6 @@ import os
 import time
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-#from bs4 import BeautifulSoup as soup
-#from urllib.request import urlopen
 
 
 class GolfBot():
@@ -113,6 +111,11 @@ class WebPage():
             time.sleep(0.5)
             self.clickLink(name)
 
+    def loginButton(self):
+        url = "./MemberIdentification.html"
+        #url = "/SiteDesign/ForeTeesScript.aspx"
+        self.driver.find_element(webdriver.common.by.By.XPATH,f'//a[contains(@href,"{url}")]').click()
+
     def setURL(self, url):
         self.url = url
 
@@ -132,6 +135,7 @@ def main():
 
     # TODO -!--> move the countdown here once testing is done, or move it after a refresh calendar click
     # TODO -!--> login to renew session
+
     # click austin
     # all buttons are <a> tags
     time.sleep(1)
