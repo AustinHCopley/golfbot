@@ -102,19 +102,25 @@ def main():
 
     cwd = os.path.abspath(os.getcwd())
     url = f"file://{cwd}/MemberIdentification.html"
-    page = WebPage(url, "chrome")
-    page.openPage()
+    pageA = WebPage(url, "chrome")
+    pageA.openPage()
+    pageB = WebPage(url, "chrome")
+    pageB.openPage()
 
     # TODO -!--> move the countdown here once testing is done
 
     # click austin
     # buttons are <a> tags
 
-    page.clickLink("Austin Copley")
+    pageA.clickLink("Austin Copley")
+    pageB.clickLink("Member 1")
+    pageA.clickLink("Sat:")
+    pageB.clickLink("Sat:")
 
     # pass the webpage to the golfbot to locate tee times
     h, m = int(teetime.split(":")[0]), int(teetime.split(":")[1])
-    golf.findTimes(page, h, m)
+    golf.findTimes(pageA, h, m)
+    golf.findTimes(pageB, h, m)
 
     # TODO -!--> either give user opportunity to select their own players and methods of transport, or autofill fields
 
