@@ -55,6 +55,29 @@ class GolfBot():
             m += 10
             if m == 60: m = 0; h += 1
 
+    def timedLaunch(self):
+
+        now = time.ctime()[11:19]
+
+        while now != self.opentime:
+
+            self.countdown(now)
+
+            # ---> stop counting a couple seconds before opentime
+            now = time.ctime()[11:19]
+            if ( int(now[:2]) == self.hr ) and ( int(now[3:5]) == self.min) and ( int(now[6:]) >= self.sec - 3):
+                break
+                
+            # otherwise, sleep 1 sec
+            time.sleep(1)
+
+        # ---> loop until it is exactly 7:30 am
+        while time.ctime()[11:19] != self.opentime:
+            continue
+
+        print("golf")
+        print(time.ctime()[11:19])
+
 
 class WebPage():
     """describes a web page for use with selenium"""
@@ -72,14 +95,12 @@ class WebPage():
     def closePage(self):
         self.driver.quit()
 
-    # TODO -!--> remove this function, its redundant; no need for it when checking for NoSuchElementException in clickLink()
     def findLink(self, name):
         # locate button by the link text
         if not (self.driver.find_elements(webdriver.common.by.By.LINK_TEXT, name)):
             print(f"{name} not found")
             return False
-        # TODO -!--> return false if it doesnt exist
-        # might have to use beautiful soup for this
+            
         return self.driver.find_element(webdriver.common.by.By.LINK_TEXT, name)
 
     def clickLink(self, name=""):
@@ -87,7 +108,10 @@ class WebPage():
         try:
             self.driver.find_element(webdriver.common.by.By.LINK_TEXT, name).click()
         except NoSuchElementException:
+            # if link can't be found
             print("Link does not exist")
+            time.sleep(0.5)
+            self.clickLink(name)
 
     def setURL(self, url):
         self.url = url
@@ -99,62 +123,37 @@ def main():
     golf = GolfBot(7, 29, 60, "07:30:00")
 
     teetime = input("Please enter the earliest time you want to play in multiples of 10min (e.g. 7:50): ")
+    date = input("Please enter the day of the month to schedule (e.g. 16): ")
 
     cwd = os.path.abspath(os.getcwd())
     url = f"file://{cwd}/MemberIdentification.html"
     pageA = WebPage(url, "chrome")
     pageA.openPage()
-    pageB = WebPage(url, "chrome")
-    pageB.openPage()
 
-    # TODO -!--> move the countdown here once testing is done
-
+    # TODO -!--> move the countdown here once testing is done, or move it after a refresh calendar click
+    # TODO -!--> login to renew session
     # click austin
-    # buttons are <a> tags
-
+    # all buttons are <a> tags
+    time.sleep(1)
     pageA.clickLink("Austin Copley")
-    pageB.clickLink("Member 1")
-    pageA.clickLink("Sat:")
-    pageB.clickLink("Sat:")
+    # click on the inputted date
+    time.sleep(1)
+    pageA.clickLink(date)
+    time.sleep(1)
 
-    # pass the webpage to the golfbot to locate tee times
+    # pass the webpage to the golfbot instance to locate tee times
     h, m = int(teetime.split(":")[0]), int(teetime.split(":")[1])
     golf.findTimes(pageA, h, m)
-    golf.findTimes(pageB, h, m)
 
-    # TODO -!--> either give user opportunity to select their own players and methods of transport, or autofill fields
+    # TODO -!--> either give user opportunity to select their own players and methods of transport
+    #            or autofill fields, or leave the page open for the user to do it manually
 
-    # TODO -!--> web scrape with beautifulsoup?
-    """client = urlopen(url)
-    html = client.read()
-    client.close()
-    # parse html
-    page = soup(html, "html.parser")
-    print(page.title) # test that the page title prints correctly"""
+    # ---> give user time reference while waiting for schedule to open
+    golf.timedLaunch()
 
-    now = time.ctime()[11:19]
+    input("Press Enter to end program and close browser...")
 
-    # ---> give user time reference
-    while now != golf.opentime:
-
-        golf.countdown(now)
-
-        # ---> stop counting a couple seconds before opentime
-        now = time.ctime()[11:19]
-        if ( int(now[:2]) == golf.hr ) and ( int(now[3:5]) == golf.min) and ( int(now[6:]) >= golf.sec - 3):
-            break
-                
-        # otherwise, sleep 1 sec
-        time.sleep(1)
-
-
-    # ---> loop until it is exactly 7:30 am
-    while time.ctime()[11:19] != golf.opentime:
-        continue
-
-    print("golf")
-    print(time.ctime()[11:19])
-
+    pageA.closePage()
 
 if __name__ == "__main__":
     main()
